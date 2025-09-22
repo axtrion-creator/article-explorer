@@ -73,7 +73,6 @@ export const useStore = create<StoreState>()(
       title,
       authors,
       year,
-      status: 'not-started',
       abstract
     };
     set((state) => ({
@@ -193,7 +192,6 @@ export const useStore = create<StoreState>()(
         title: 'The Future of Artificial Intelligence in Healthcare',
         authors: 'Dr. Sarah Johnson, Prof. Michael Chen',
         year: 2024,
-        status: 'finished' as const,
         abstract: 'This paper explores the potential applications of AI in healthcare, including diagnostic tools, treatment optimization, and patient monitoring systems.',
         doi: '10.1000/example1'
       },
@@ -202,7 +200,6 @@ export const useStore = create<StoreState>()(
         title: 'Machine Learning Approaches to Climate Change Prediction',
         authors: 'Dr. Emily Rodriguez, Dr. James Wilson',
         year: 2023,
-        status: 'processing' as const,
         abstract: 'We present novel ML techniques for climate modeling that improve accuracy and reduce computational requirements.',
         doi: '10.1000/example2'
       },
@@ -211,7 +208,6 @@ export const useStore = create<StoreState>()(
         title: 'Quantum Computing Applications in Cryptography',
         authors: 'Prof. David Kim, Dr. Lisa Zhang',
         year: 2024,
-        status: 'not-started' as const,
         abstract: 'This research investigates quantum algorithms for encryption and their implications for cybersecurity.',
         doi: '10.1000/example3'
       }

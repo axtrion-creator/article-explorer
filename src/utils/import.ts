@@ -75,7 +75,6 @@ export const convertToArticles = (data: ImportedData[]): Article[] => {
       title: item.title || `Untitled Article ${index + 1}`,
       authors: item.authors || 'Unknown Author',
       year: item.year || new Date().getFullYear(),
-      status: 'not-started' as const,
       abstract: item.abstract,
       doi: item.doi,
       url: item.url

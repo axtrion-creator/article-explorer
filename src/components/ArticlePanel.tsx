@@ -89,18 +89,6 @@ const ArticlePanel = () => {
               <p style={{ fontSize: '12px', color: '#6b7280', margin: '4px 0' }}>
                 {article.year} • {article.authors}
               </p>
-              <span style={{
-                display: 'inline-block',
-                padding: '2px 8px',
-                fontSize: '12px',
-                borderRadius: '9999px',
-                backgroundColor: article.status === 'finished' ? '#dcfce7' : 
-                               article.status === 'processing' ? '#fef3c7' : '#f3f4f6',
-                color: article.status === 'finished' ? '#166534' : 
-                       article.status === 'processing' ? '#92400e' : '#374151'
-              }}>
-                {article.status.replace('-', ' ')}
-              </span>
             </div>
             <button
               onClick={(e) => {

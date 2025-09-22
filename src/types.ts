@@ -3,7 +3,6 @@ export interface Article {
   title: string;
   authors: string;
   year: number;
-  status: 'not-started' | 'processing' | 'finished';
   abstract?: string;
   doi?: string;
   url?: string;

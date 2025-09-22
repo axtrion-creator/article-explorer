@@ -62,7 +62,7 @@ const ImportModal = () => {
                 <div key={index} style={{ padding: '8px', borderBottom: '1px solid #e5e7eb', fontSize: '14px' }}>
                   <div style={{ fontWeight: '500' }}>{article.title}</div>
                   <div style={{ color: '#6b7280' }}>
-                    {article.year} • {article.authors} • {article.status}
+                    {article.year} • {article.authors}
                   </div>
                 </div>
               ))}
