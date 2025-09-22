@@ -14,8 +14,42 @@ function App() {
     showAddArticleModal, 
     setShowAddArticleModal,
     showAddObservationModal,
-    setShowAddObservationModal
+    setShowAddObservationModal,
+    exportData,
+    importData,
+    clearAllData
   } = useStore();
+
+  const handleExport = () => {
+    const data = exportData();
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `article-explorer-backup-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImport = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const data = e.target?.result as string;
+          importData(data);
+        };
+        reader.readAsText(file);
+      }
+    };
+    input.click();
+  };
 
   return (
     <div style={{ 
@@ -25,7 +59,7 @@ function App() {
       fontFamily: 'system-ui, -apple-system, sans-serif'
     }}>
       {/* Main Graph View */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div style={{ width: '800px', display: 'flex', flexDirection: 'column' }}>
         {/* Header */}
         <div style={{ 
           padding: '16px 24px', 
@@ -80,6 +114,42 @@ function App() {
             >
               Import Articles
             </Button>
+            <Button 
+              onClick={handleExport}
+              style={{ 
+                backgroundColor: '#8b5cf6', 
+                color: 'white',
+                padding: '8px 16px',
+                fontSize: '14px',
+                fontWeight: '500'
+              }}
+            >
+              Export Data
+            </Button>
+            <Button 
+              onClick={handleImport}
+              style={{ 
+                backgroundColor: '#f97316', 
+                color: 'white',
+                padding: '8px 16px',
+                fontSize: '14px',
+                fontWeight: '500'
+              }}
+            >
+              Import Data
+            </Button>
+            <Button 
+              onClick={clearAllData}
+              style={{ 
+                backgroundColor: '#ef4444', 
+                color: 'white',
+                padding: '8px 16px',
+                fontSize: '14px',
+                fontWeight: '500'
+              }}
+            >
+              Clear All
+            </Button>
           </div>
         </div>
 
@@ -90,7 +160,7 @@ function App() {
       </div>
 
       {/* Article Panel */}
-      <div style={{ width: '800px' }}>
+      <div style={{ width: '1600px' }}>
         <ArticlePanel />
       </div>
 

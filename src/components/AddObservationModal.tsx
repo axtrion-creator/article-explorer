@@ -108,11 +108,13 @@ const AddObservationModal = ({ onClose }: AddObservationModalProps) => {
               }}
               required
             >
-              {articles.map(article => (
-                <option key={article.id} value={article.id}>
-                  {article.title} ({article.year})
-                </option>
-              ))}
+              {articles
+                .sort((a, b) => a.title.localeCompare(b.title))
+                .map(article => (
+                  <option key={article.id} value={article.id}>
+                    {article.title} ({article.year})
+                  </option>
+                ))}
             </select>
           </div>
 
@@ -183,11 +185,13 @@ const AddObservationModal = ({ onClose }: AddObservationModalProps) => {
                 required
               >
                 <option value="">Select a concept...</option>
-                {concepts.map(concept => (
-                  <option key={concept.id} value={concept.id}>
-                    {concept.label} ({concept.dimension})
-                  </option>
-                ))}
+                {concepts
+                  .sort((a, b) => a.label.localeCompare(b.label))
+                  .map(concept => (
+                    <option key={concept.id} value={concept.id}>
+                      {concept.label} ({concept.dimension})
+                    </option>
+                  ))}
               </select>
             )}
           </div>

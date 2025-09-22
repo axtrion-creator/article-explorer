@@ -35,6 +35,11 @@ export const parseExcelFile = async (file: File): Promise<ImportedData[]> => {
           const sheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[sheetName];
           const jsonData = XLSX.utils.sheet_to_json(worksheet);
+          
+          // Debug: Log the parsed data to see what we're getting
+          console.log('Excel parsed data:', jsonData);
+          console.log('First row keys:', jsonData.length > 0 ? Object.keys(jsonData[0]) : 'No data');
+          
           parsedData = jsonData as ImportedData[];
           resolve(parsedData);
         } else {
@@ -58,14 +63,22 @@ export const parseExcelFile = async (file: File): Promise<ImportedData[]> => {
 };
 
 export const convertToArticles = (data: ImportedData[]): Article[] => {
-  return data.map((item, index) => ({
-    id: crypto.randomUUID(),
-    title: item.title || `Untitled Article ${index + 1}`,
-    authors: item.authors || 'Unknown Author',
-    year: item.year || new Date().getFullYear(),
-    status: 'not-started' as const,
-    abstract: item.abstract,
-    doi: item.doi,
-    url: item.url
-  }));
+  // Debug: Log the data being converted
+  console.log('Converting data to articles:', data);
+  
+  return data.map((item, index) => {
+    // Debug: Log each item being processed
+    console.log(`Processing item ${index}:`, item);
+    
+    return {
+      id: crypto.randomUUID(),
+      title: item.title || `Untitled Article ${index + 1}`,
+      authors: item.authors || 'Unknown Author',
+      year: item.year || new Date().getFullYear(),
+      status: 'not-started' as const,
+      abstract: item.abstract,
+      doi: item.doi,
+      url: item.url
+    };
+  });
 };

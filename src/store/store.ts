@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import type { Article, Concept, Observation } from '../types';
 
 interface StoreState {
@@ -21,73 +22,80 @@ interface StoreState {
   // Actions
   addArticle: (article: Article) => void;
   addNewArticle: (title: string, authors: string, year: number, abstract?: string) => string;
+  removeArticle: (id: string) => void;
   setSelectedArticle: (id: string | null) => void;
   addConcept: (concept: Concept) => void;
   addNewConcept: (label: string, dimension: 'purpose' | 'sector' | 'decision' | 'knowledge') => string;
   setSelectedConcept: (id: string | null) => void;
   addObservation: (observation: Omit<Observation, 'id' | 'createdAt'>) => void;
+  removeObservation: (id: string) => void;
   setShowImportModal: (show: boolean) => void;
   setShowAddArticleModal: (show: boolean) => void;
   setShowAddObservationModal: (show: boolean) => void;
   getObservationsForArticle: (articleId: string) => Observation[];
   getObservationsForConcept: (conceptId: string) => Observation[];
+  exportData: () => string;
+  importData: (data: string) => void;
+  clearAllData: () => void;
 }
 
-export const useStore = create<StoreState>((set, get) => ({
-  // Initial state with sample data
-  articles: [
-    {
-      id: '1',
-      title: 'The Future of Artificial Intelligence in Healthcare',
-      authors: 'Dr. Sarah Johnson, Prof. Michael Chen',
-      year: 2024,
-      status: 'finished',
-      abstract: 'This paper explores the potential applications of AI in healthcare...',
-      doi: '10.1000/example1'
-    },
-    {
-      id: '2', 
-      title: 'Machine Learning Approaches to Climate Change Prediction',
-      authors: 'Dr. Emily Rodriguez, Dr. James Wilson',
-      year: 2023,
-      status: 'processing',
-      abstract: 'We present novel ML techniques for climate modeling...',
-      doi: '10.1000/example2'
-    },
-    {
-      id: '3',
-      title: 'Quantum Computing Applications in Cryptography',
-      authors: 'Prof. David Kim, Dr. Lisa Zhang',
-      year: 2024,
-      status: 'not-started',
-      abstract: 'This research investigates quantum algorithms for encryption...',
-      doi: '10.1000/example3'
-    }
-  ],
-  selectedArticleId: '1',
-  concepts: [
-    { id: 'c1', label: 'Artificial Intelligence', dimension: 'knowledge', parentId: undefined },
-    { id: 'c2', label: 'Machine Learning', dimension: 'knowledge', parentId: 'c1' },
-    { id: 'c3', label: 'Healthcare', dimension: 'sector', parentId: undefined },
-    { id: 'c4', label: 'Climate Science', dimension: 'sector', parentId: undefined },
-    { id: 'c5', label: 'Quantum Computing', dimension: 'knowledge', parentId: undefined },
-    { id: 'c6', label: 'Cryptography', dimension: 'knowledge', parentId: 'c5' },
-    { id: 'c7', label: 'Research Purpose', dimension: 'purpose', parentId: undefined },
-    { id: 'c8', label: 'Decision Making', dimension: 'decision', parentId: undefined }
-  ],
-  selectedConceptId: null,
-  observations: [
-    { id: 'o1', articleId: '1', conceptId: 'c1', text: 'AI shows promise in medical diagnosis', page: 1, confidence: 0.9, createdAt: new Date() },
-    { id: 'o2', articleId: '1', conceptId: 'c2', text: 'Deep learning models outperform traditional methods', page: 3, confidence: 0.85, createdAt: new Date() },
-    { id: 'o3', articleId: '1', conceptId: 'c3', text: 'Healthcare industry adoption is increasing', page: 5, confidence: 0.8, createdAt: new Date() },
-    { id: 'o4', articleId: '2', conceptId: 'c2', text: 'Neural networks improve climate predictions', page: 2, confidence: 0.88, createdAt: new Date() },
-    { id: 'o5', articleId: '2', conceptId: 'c4', text: 'Climate models need better accuracy', page: 4, confidence: 0.75, createdAt: new Date() },
-    { id: 'o6', articleId: '3', conceptId: 'c5', text: 'Quantum computers threaten current encryption', page: 1, confidence: 0.95, createdAt: new Date() },
-    { id: 'o7', articleId: '3', conceptId: 'c6', text: 'New quantum-resistant algorithms needed', page: 3, confidence: 0.9, createdAt: new Date() }
-  ],
-  showImportModal: false,
-  showAddArticleModal: false,
-  showAddObservationModal: false,
+export const useStore = create<StoreState>()(
+  persist(
+    (set, get) => ({
+      // Initial state - empty by default, will be loaded from localStorage
+      articles: [
+        {
+          id: '1',
+          title: 'The Future of Artificial Intelligence in Healthcare',
+          authors: 'Dr. Sarah Johnson, Prof. Michael Chen',
+          year: 2024,
+          status: 'finished',
+          abstract: 'This paper explores the potential applications of AI in healthcare...',
+          doi: '10.1000/example1'
+        },
+        {
+          id: '2', 
+          title: 'Machine Learning Approaches to Climate Change Prediction',
+          authors: 'Dr. Emily Rodriguez, Dr. James Wilson',
+          year: 2023,
+          status: 'processing',
+          abstract: 'We present novel ML techniques for climate modeling...',
+          doi: '10.1000/example2'
+        },
+        {
+          id: '3',
+          title: 'Quantum Computing Applications in Cryptography',
+          authors: 'Prof. David Kim, Dr. Lisa Zhang',
+          year: 2024,
+          status: 'not-started',
+          abstract: 'This research investigates quantum algorithms for encryption...',
+          doi: '10.1000/example3'
+        }
+      ],
+      selectedArticleId: '1',
+      concepts: [
+        { id: 'c1', label: 'Artificial Intelligence', dimension: 'knowledge', parentId: undefined },
+        { id: 'c2', label: 'Machine Learning', dimension: 'knowledge', parentId: 'c1' },
+        { id: 'c3', label: 'Healthcare', dimension: 'sector', parentId: undefined },
+        { id: 'c4', label: 'Climate Science', dimension: 'sector', parentId: undefined },
+        { id: 'c5', label: 'Quantum Computing', dimension: 'knowledge', parentId: undefined },
+        { id: 'c6', label: 'Cryptography', dimension: 'knowledge', parentId: 'c5' },
+        { id: 'c7', label: 'Research Purpose', dimension: 'purpose', parentId: undefined },
+        { id: 'c8', label: 'Decision Making', dimension: 'decision', parentId: undefined }
+      ],
+      selectedConceptId: null,
+      observations: [
+        { id: 'o1', articleId: '1', conceptId: 'c1', text: 'AI shows promise in medical diagnosis', page: 1, confidence: 0.9, createdAt: new Date() },
+        { id: 'o2', articleId: '1', conceptId: 'c2', text: 'Deep learning models outperform traditional methods', page: 3, confidence: 0.85, createdAt: new Date() },
+        { id: 'o3', articleId: '1', conceptId: 'c3', text: 'Healthcare industry adoption is increasing', page: 5, confidence: 0.8, createdAt: new Date() },
+        { id: 'o4', articleId: '2', conceptId: 'c2', text: 'Neural networks improve climate predictions', page: 2, confidence: 0.88, createdAt: new Date() },
+        { id: 'o5', articleId: '2', conceptId: 'c4', text: 'Climate models need better accuracy', page: 4, confidence: 0.75, createdAt: new Date() },
+        { id: 'o6', articleId: '3', conceptId: 'c5', text: 'Quantum computers threaten current encryption', page: 1, confidence: 0.95, createdAt: new Date() },
+        { id: 'o7', articleId: '3', conceptId: 'c6', text: 'New quantum-resistant algorithms needed', page: 3, confidence: 0.9, createdAt: new Date() }
+      ],
+      showImportModal: false,
+      showAddArticleModal: false,
+      showAddObservationModal: false,
   
   // Actions
   addArticle: (article) => set((state) => ({
@@ -108,6 +116,12 @@ export const useStore = create<StoreState>((set, get) => ({
     }));
     return newArticle.id;
   },
+  
+  removeArticle: (id) => set((state) => ({
+    articles: state.articles.filter(article => article.id !== id),
+    selectedArticleId: state.selectedArticleId === id ? null : state.selectedArticleId,
+    observations: state.observations.filter(obs => obs.articleId !== id)
+  })),
   
   setSelectedArticle: (id) => set({ selectedArticleId: id }),
   
@@ -137,6 +151,10 @@ export const useStore = create<StoreState>((set, get) => ({
     }]
   })),
   
+  removeObservation: (id) => set((state) => ({
+    observations: state.observations.filter(obs => obs.id !== id)
+  })),
+  
   setShowImportModal: (show) => set({ showImportModal: show }),
   
   setShowAddArticleModal: (show) => set({ showAddArticleModal: show }),
@@ -149,5 +167,70 @@ export const useStore = create<StoreState>((set, get) => ({
   
   getObservationsForConcept: (conceptId) => {
     return get().observations.filter(obs => obs.conceptId === conceptId);
+  },
+  
+  exportData: () => {
+    const state = get();
+    const exportData = {
+      articles: state.articles,
+      concepts: state.concepts,
+      observations: state.observations,
+      exportedAt: new Date().toISOString()
+    };
+    return JSON.stringify(exportData, null, 2);
+  },
+  
+  importData: (data) => {
+    try {
+      const parsedData = JSON.parse(data);
+      if (parsedData.articles && parsedData.concepts && parsedData.observations) {
+        set({
+          articles: parsedData.articles,
+          concepts: parsedData.concepts,
+          observations: parsedData.observations,
+          selectedArticleId: null,
+          selectedConceptId: null
+        });
+        alert('Data imported successfully!');
+      } else {
+        alert('Invalid data format');
+      }
+    } catch (error) {
+      alert('Error importing data: ' + error);
+    }
+  },
+  
+  clearAllData: () => {
+    if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
+      set({
+        articles: [],
+        concepts: [
+          { id: 'c1', label: 'Artificial Intelligence', dimension: 'knowledge', parentId: undefined },
+          { id: 'c2', label: 'Machine Learning', dimension: 'knowledge', parentId: 'c1' },
+          { id: 'c3', label: 'Healthcare', dimension: 'sector', parentId: undefined },
+          { id: 'c4', label: 'Climate Science', dimension: 'sector', parentId: undefined },
+          { id: 'c5', label: 'Quantum Computing', dimension: 'knowledge', parentId: undefined },
+          { id: 'c6', label: 'Cryptography', dimension: 'knowledge', parentId: 'c5' },
+          { id: 'c7', label: 'Research Purpose', dimension: 'purpose', parentId: undefined },
+          { id: 'c8', label: 'Decision Making', dimension: 'decision', parentId: undefined }
+        ],
+        observations: [],
+        selectedArticleId: null,
+        selectedConceptId: null
+      });
+    }
   }
-}));
+    }),
+    {
+      name: 'article-explorer-storage', // unique name for localStorage key
+      partialize: (state) => ({
+        // Only persist the data we want to save, not UI state
+        articles: state.articles,
+        concepts: state.concepts,
+        observations: state.observations,
+        selectedArticleId: state.selectedArticleId,
+        selectedConceptId: state.selectedConceptId
+      })
+    }
+  )
+);
