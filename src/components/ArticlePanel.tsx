@@ -44,9 +44,29 @@ const ArticlePanel = () => {
         overflowY: 'auto',
         paddingBottom: (selectedArticle || selectedConcept) ? '400px' : '0' // Reserve space for observations
       }}>
-        {articles
-          .sort((a, b) => a.title.localeCompare(b.title))
-          .map(article => (
+        {articles.length === 0 ? (
+          <div style={{ 
+            padding: '32px', 
+            textAlign: 'center', 
+            color: '#6b7280',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%'
+          }}>
+            <h3 style={{ fontSize: '18px', marginBottom: '8px', color: '#374151' }}>Welcome to Article Explorer!</h3>
+            <p style={{ marginBottom: '16px', lineHeight: '1.5' }}>
+              Get started by loading sample data or importing your own articles.
+            </p>
+            <p style={{ fontSize: '14px', color: '#9ca3af' }}>
+              Click "Load Sample Data" in the header to see the app in action!
+            </p>
+          </div>
+        ) : (
+          articles
+            .sort((a, b) => a.title.localeCompare(b.title))
+            .map(article => (
           <div
             key={article.id}
             style={{
@@ -105,7 +125,8 @@ const ArticlePanel = () => {
               ✕
             </button>
           </div>
-        ))}
+        ))
+        )}
       </div>
 
       {/* Observations Section - Bottom aligned with canvas */}

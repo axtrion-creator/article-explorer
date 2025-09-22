@@ -17,7 +17,8 @@ function App() {
     setShowAddObservationModal,
     exportData,
     importData,
-    clearAllData
+    clearAllData,
+    loadSampleData
   } = useStore();
 
   const handleExport = () => {
@@ -137,6 +138,18 @@ function App() {
               }}
             >
               Import Data
+            </Button>
+            <Button 
+              onClick={loadSampleData}
+              style={{ 
+                backgroundColor: '#8b5cf6', 
+                color: 'white',
+                padding: '8px 16px',
+                fontSize: '14px',
+                fontWeight: '500'
+              }}
+            >
+              Load Sample Data
             </Button>
             <Button 
               onClick={clearAllData}

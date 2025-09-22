@@ -37,42 +37,15 @@ interface StoreState {
   exportData: () => string;
   importData: (data: string) => void;
   clearAllData: () => void;
+  loadSampleData: () => void;
 }
 
 export const useStore = create<StoreState>()(
   persist(
     (set, get) => ({
-      // Initial state - empty by default, will be loaded from localStorage
-      articles: [
-        {
-          id: '1',
-          title: 'The Future of Artificial Intelligence in Healthcare',
-          authors: 'Dr. Sarah Johnson, Prof. Michael Chen',
-          year: 2024,
-          status: 'finished',
-          abstract: 'This paper explores the potential applications of AI in healthcare...',
-          doi: '10.1000/example1'
-        },
-        {
-          id: '2', 
-          title: 'Machine Learning Approaches to Climate Change Prediction',
-          authors: 'Dr. Emily Rodriguez, Dr. James Wilson',
-          year: 2023,
-          status: 'processing',
-          abstract: 'We present novel ML techniques for climate modeling...',
-          doi: '10.1000/example2'
-        },
-        {
-          id: '3',
-          title: 'Quantum Computing Applications in Cryptography',
-          authors: 'Prof. David Kim, Dr. Lisa Zhang',
-          year: 2024,
-          status: 'not-started',
-          abstract: 'This research investigates quantum algorithms for encryption...',
-          doi: '10.1000/example3'
-        }
-      ],
-      selectedArticleId: '1',
+      // Initial state - will be loaded from localStorage or use defaults
+      articles: [],
+      selectedArticleId: null,
       concepts: [
         { id: 'c1', label: 'Artificial Intelligence', dimension: 'knowledge', parentId: undefined },
         { id: 'c2', label: 'Machine Learning', dimension: 'knowledge', parentId: 'c1' },
@@ -84,15 +57,7 @@ export const useStore = create<StoreState>()(
         { id: 'c8', label: 'Decision Making', dimension: 'decision', parentId: undefined }
       ],
       selectedConceptId: null,
-      observations: [
-        { id: 'o1', articleId: '1', conceptId: 'c1', text: 'AI shows promise in medical diagnosis', page: 1, confidence: 0.9, createdAt: new Date() },
-        { id: 'o2', articleId: '1', conceptId: 'c2', text: 'Deep learning models outperform traditional methods', page: 3, confidence: 0.85, createdAt: new Date() },
-        { id: 'o3', articleId: '1', conceptId: 'c3', text: 'Healthcare industry adoption is increasing', page: 5, confidence: 0.8, createdAt: new Date() },
-        { id: 'o4', articleId: '2', conceptId: 'c2', text: 'Neural networks improve climate predictions', page: 2, confidence: 0.88, createdAt: new Date() },
-        { id: 'o5', articleId: '2', conceptId: 'c4', text: 'Climate models need better accuracy', page: 4, confidence: 0.75, createdAt: new Date() },
-        { id: 'o6', articleId: '3', conceptId: 'c5', text: 'Quantum computers threaten current encryption', page: 1, confidence: 0.95, createdAt: new Date() },
-        { id: 'o7', articleId: '3', conceptId: 'c6', text: 'New quantum-resistant algorithms needed', page: 3, confidence: 0.9, createdAt: new Date() }
-      ],
+      observations: [],
       showImportModal: false,
       showAddArticleModal: false,
       showAddObservationModal: false,
@@ -219,6 +184,54 @@ export const useStore = create<StoreState>()(
         selectedConceptId: null
       });
     }
+  },
+  
+  loadSampleData: () => {
+    const sampleArticles = [
+      {
+        id: 'sample-1',
+        title: 'The Future of Artificial Intelligence in Healthcare',
+        authors: 'Dr. Sarah Johnson, Prof. Michael Chen',
+        year: 2024,
+        status: 'finished' as const,
+        abstract: 'This paper explores the potential applications of AI in healthcare, including diagnostic tools, treatment optimization, and patient monitoring systems.',
+        doi: '10.1000/example1'
+      },
+      {
+        id: 'sample-2', 
+        title: 'Machine Learning Approaches to Climate Change Prediction',
+        authors: 'Dr. Emily Rodriguez, Dr. James Wilson',
+        year: 2023,
+        status: 'processing' as const,
+        abstract: 'We present novel ML techniques for climate modeling that improve accuracy and reduce computational requirements.',
+        doi: '10.1000/example2'
+      },
+      {
+        id: 'sample-3',
+        title: 'Quantum Computing Applications in Cryptography',
+        authors: 'Prof. David Kim, Dr. Lisa Zhang',
+        year: 2024,
+        status: 'not-started' as const,
+        abstract: 'This research investigates quantum algorithms for encryption and their implications for cybersecurity.',
+        doi: '10.1000/example3'
+      }
+    ];
+    
+    const sampleObservations = [
+      { id: 'obs-1', articleId: 'sample-1', conceptId: 'c1', text: 'AI shows promise in medical diagnosis with 95% accuracy', page: 1, confidence: 0.9, createdAt: new Date() },
+      { id: 'obs-2', articleId: 'sample-1', conceptId: 'c2', text: 'Deep learning models outperform traditional methods by 20%', page: 3, confidence: 0.85, createdAt: new Date() },
+      { id: 'obs-3', articleId: 'sample-1', conceptId: 'c3', text: 'Healthcare industry adoption is increasing rapidly', page: 5, confidence: 0.8, createdAt: new Date() },
+      { id: 'obs-4', articleId: 'sample-2', conceptId: 'c2', text: 'Neural networks improve climate predictions significantly', page: 2, confidence: 0.88, createdAt: new Date() },
+      { id: 'obs-5', articleId: 'sample-2', conceptId: 'c4', text: 'Climate models need better accuracy for policy decisions', page: 4, confidence: 0.75, createdAt: new Date() },
+      { id: 'obs-6', articleId: 'sample-3', conceptId: 'c5', text: 'Quantum computers threaten current encryption methods', page: 1, confidence: 0.95, createdAt: new Date() },
+      { id: 'obs-7', articleId: 'sample-3', conceptId: 'c6', text: 'New quantum-resistant algorithms are urgently needed', page: 3, confidence: 0.9, createdAt: new Date() }
+    ];
+    
+    set({
+      articles: sampleArticles,
+      observations: sampleObservations,
+      selectedArticleId: 'sample-1'
+    });
   }
     }),
     {
