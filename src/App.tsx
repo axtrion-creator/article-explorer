@@ -84,13 +84,15 @@ function App() {
         </div>
 
         {/* Graph Container */}
-        <div style={{ flex: 1, padding: '16px' }}>
+        <div style={{ flex: 1, padding: '8px' }}>
           <GraphView />
         </div>
       </div>
 
       {/* Article Panel */}
-      <ArticlePanel />
+      <div style={{ width: '800px' }}>
+        <ArticlePanel />
+      </div>
 
       {/* Import Modal */}
       {showImportModal && <ImportModal />}

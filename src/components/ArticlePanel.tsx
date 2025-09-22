@@ -13,12 +13,30 @@ const ArticlePanel = () => {
   const observations = selectedArticle ? getObservationsForArticle(selectedArticle.id) : [];
 
   return (
-    <div style={{ width: '320px', backgroundColor: 'white', borderLeft: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', display: 'flex', flexDirection: 'column' }}>
-      <div style={{ padding: '16px', borderBottom: '1px solid #e5e7eb' }}>
+    <div style={{ 
+      width: '100%', 
+      height: '100vh', 
+      backgroundColor: 'white', 
+      borderLeft: '1px solid #e5e7eb', 
+      boxShadow: '0 1px 3px rgba(0,0,0,0.1)', 
+      display: 'flex', 
+      flexDirection: 'column',
+      position: 'relative'
+    }}>
+      {/* Articles Section - Top */}
+      <div style={{ 
+        padding: '16px', 
+        borderBottom: '1px solid #e5e7eb',
+        flex: '0 0 auto'
+      }}>
         <h2 style={{ fontSize: '18px', fontWeight: '600' }}>Articles ({articles.length})</h2>
       </div>
       
-      <div style={{ flex: 1, overflowY: 'auto' }}>
+      <div style={{ 
+        flex: '1', 
+        overflowY: 'auto',
+        paddingBottom: selectedArticle ? '400px' : '0' // Reserve space for observations
+      }}>
         {articles.map(article => (
           <div
             key={article.id}
@@ -52,13 +70,30 @@ const ArticlePanel = () => {
         ))}
       </div>
 
+      {/* Observations Section - Bottom aligned with canvas */}
       {selectedArticle && (
-        <div style={{ padding: '16px', borderTop: '1px solid #e5e7eb', backgroundColor: '#f9fafb' }}>
-          <h3 style={{ fontWeight: '500', marginBottom: '8px' }}>Observations ({observations.length})</h3>
+        <div style={{ 
+          position: 'absolute',
+          bottom: '0',
+          left: '0',
+          right: '0',
+          padding: '16px', 
+          borderTop: '1px solid #e5e7eb', 
+          backgroundColor: '#f9fafb',
+          height: '400px',
+          display: 'flex',
+          flexDirection: 'column'
+        }}>
+          <h3 style={{ fontWeight: '500', marginBottom: '8px', flex: '0 0 auto' }}>
+            Observations ({observations.length})
+          </h3>
           
           {/* Display existing observations */}
           {observations.length > 0 && (
-            <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
+            <div style={{ 
+              flex: '1',
+              overflowY: 'auto'
+            }}>
               {observations.map(obs => {
                 const concept = concepts.find(c => c.id === obs.conceptId);
                 return (

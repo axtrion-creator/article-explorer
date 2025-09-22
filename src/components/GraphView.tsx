@@ -5,6 +5,11 @@ import { useStore } from '../store/store';
 const GraphView = () => {
   const graphRef = useRef<any>(null);
   const { concepts, observations, articles, setSelectedConcept } = useStore();
+  
+  // Fixed canvas dimensions - square
+  const canvasWidth = 1000;
+  const canvasHeight = 1000;
+  const padding = 32; // 16px padding on each side
 
   // Prepare graph data
   const nodes = concepts.map(concept => ({
@@ -80,28 +85,40 @@ const GraphView = () => {
 
   return (
     <div style={{ 
-      width: '100%', 
-      height: '100%',
+      width: `${canvasWidth + padding}px`, 
+      height: `${canvasHeight + padding}px`,
       backgroundColor: 'white',
       borderRadius: '8px',
       border: '1px solid #e5e7eb',
-      overflow: 'hidden'
+      overflow: 'visible',
+      position: 'relative',
+      margin: '0 auto'
     }}>
-      <ForceGraph2D
-        ref={graphRef}
-        graphData={{ nodes, links }}
-        nodeLabel={(node: any) => `${node.label}\nObservations: ${observations.filter(obs => obs.conceptId === node.id).length}`}
-        nodeColor={nodeColor}
-        nodeVal={nodeSize}
-        linkWidth={(link: any) => link.weight ? Math.max(1, link.weight * 2) : 1}
-        linkColor="#94A3B8"
-        onNodeClick={(node: any) => setSelectedConcept(node.id)}
-        width={800}
-        height={600}
-        cooldownTicks={100}
-        d3AlphaDecay={0.01}
-        d3VelocityDecay={0.3}
-      />
+      <div style={{ 
+        width: `${canvasWidth}px`, 
+        height: `${canvasHeight}px`, 
+        padding: '16px',
+        boxSizing: 'border-box',
+        margin: '0 auto'
+      }}>
+        <ForceGraph2D
+          ref={graphRef}
+          graphData={{ nodes, links }}
+          nodeLabel={(node: any) => `${node.label}\nObservations: ${observations.filter(obs => obs.conceptId === node.id).length}`}
+          nodeColor={nodeColor}
+          nodeVal={nodeSize}
+          linkWidth={(link: any) => link.weight ? Math.max(1, link.weight * 2) : 1}
+          linkColor="#94A3B8"
+          onNodeClick={(node: any) => setSelectedConcept(node.id)}
+          width={canvasWidth - 32}
+          height={canvasHeight - 32}
+          cooldownTicks={100}
+          d3AlphaDecay={0.01}
+          d3VelocityDecay={0.3}
+          d3Force="center"
+          d3ForceStrength={0.1}
+        />
+      </div>
     </div>
   );
 };
