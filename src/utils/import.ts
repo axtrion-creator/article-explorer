@@ -38,7 +38,7 @@ export const parseExcelFile = async (file: File): Promise<ImportedData[]> => {
           
           // Debug: Log the parsed data to see what we're getting
           console.log('Excel parsed data:', jsonData);
-          console.log('First row keys:', jsonData.length > 0 ? Object.keys(jsonData[0]) : 'No data');
+          console.log('First row keys:', jsonData.length > 0 ? Object.keys(jsonData[0] as any) : 'No data');
           
           parsedData = jsonData as ImportedData[];
           resolve(parsedData);

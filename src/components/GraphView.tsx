@@ -155,8 +155,6 @@ const GraphView = () => {
           cooldownTicks={100}
           d3AlphaDecay={0.01}
           d3VelocityDecay={0.3}
-          d3Force="center"
-          d3ForceStrength={0.1}
         />
       </div>
     </div>
